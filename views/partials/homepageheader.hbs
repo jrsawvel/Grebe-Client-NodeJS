@@ -1,0 +1,65 @@
+<!doctype html>
+<!--[if lt IE 7 ]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7 ]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8 ]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if IE 9 ]>    <html class="no-js ie9" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+<title>{{pagetitle}} | {{default_values.app}}</title>
+<meta charset="UTF-8" /> 
+<!--[if lt IE 9]> 
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<![endif]-->
+<meta name="generator" content="Grebe" />
+<meta name="viewport" content="width=device-width initial-scale=1.0 user-scalable=yes" />
+<link rel='stylesheet' href="http://fonts.googleapis.com/css?family=Open+Sans:regular,italic,bold,bolditalic"  type="text/css"> 
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"> 
+<link rel="stylesheet" type="text/css" href="http://grebe.soupmode.com/css/medium.css"  />
+<link rel="stylesheet" type="text/css" href="http://grebe.soupmode.com/css/grebe.css"  /> 
+<link rel="stylesheet" type="text/css" href="http://grebe.soupmode.com/css/sansserif.css"  />
+<!--[if lt IE 9]>
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<style>
+.fa {
+    color: #ccc;
+}
+</style>
+
+</head>
+<body>
+
+<div id="site-head" style="background-image: url({{background_image}})"> 
+
+<header>
+<div style="float:right;padding-right:10px;">
+<a title="Search" href="/searchform"><i class="fa fa-search"></i></a>
+</div>
+<nav>
+<ul>
+<li><a title="Home Page" href="{{default_values.home_url}}"><i class="fa fa-home"></i></li></a> 
+</ul>
+</nav>
+</header>
+
+
+<div class="vertical">
+
+{{#if filter_by_author_name}}
+<div id="blog-title"><a title="{{filtered_author_name}}'s profile page"  href="/user/{{filtered_author_name}}">{{blog_title}}</a></div>
+<div style="margin:0;padding:0;">
+<a title="{{filtered_author_name}}'s articles"  href="/userarticles/{{filtered_author_name}}"><img id="blog-author-image" src="{{blog_author_image}}" border="0" /></a>
+</div>
+<div id="blog-description">{{blog_description}}</div>
+{{else}}
+<div id="blog-title"><a href="/post/about">{{blog_title}}</a></div>
+<div id="blog-description">{{blog_description}}</div>
+{{/if}}
+
+</div>
+</div>
+
+<section id="content">

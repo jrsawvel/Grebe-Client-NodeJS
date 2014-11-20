@@ -1,0 +1,61 @@
+{{> header}}
+
+<p>
+All versions for: <a href="{{home_url}}/{{current_post_id}}/{{current_uri_title}}">{{current_title}}</a> 
+</p>
+
+
+<form method="post" action="{{home_url}}/compare">
+
+<table border="0" cellspacing="5" width="90%">
+
+<tr>
+<td align="center"><input class="submitbutton" type="submit" value="Compare Versions"></td>
+<td colspan="3">&nbsp;</td>
+</tr>
+
+<tr>
+<th align="center">Select</th>
+<th align="left">View Post</th>
+<th align="left">Edited By</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+<th align="left">Edit Reason</th>
+</tr>
+
+<tr>
+<td align="center">
+<input type="radio" name="leftid" value="{{current_post_id}}">
+<input type="radio" name="rightid" value="{{current_post_id}}" checked="checked">
+</td>
+<td align="left"><a href="{{home_url}}/{{current_post_id}}/{{current_uri_title}}">version {{current_version}}</a></td>
+<td align="left"><a href="{{home_url}}/user/{{current_author_name}}">{{current_author_name}}</a></td>
+<td align="right">{{current_modified_date}}</td>
+<td align="left">{{current_modified_time}}</td>
+<td align="left">{{current_edit_reason}}</td>
+</tr>
+
+{{#each version_list}}
+<tr>
+<td align="center">
+<input type="radio" name="leftid" value="{{this.post_id}}" {{this.checked}} >
+<input type="radio" name="rightid" value="{{this.post_id}}">
+</td>
+<td align="left"><a href="{{home_url}}/{{this.post_id}}/{{this.uri_title}}">version {{this.version}}</a></td>
+<td align="left"><a href="{{home_url}}/user/{{this.author_name}}">{{this.author_name}}</a></td>
+<td align="right">{{this.version_date}}</td>
+<td align="left">{{this.version_time}}</td>
+<td align="left">{{this.edit_reason}}</td>
+</tr>
+{{/each}}
+
+<tr>
+<td align="center"><input class="submitbutton" type="submit" value="Compare Versions"></td>
+<td colspan="3">&nbsp;</td>
+</tr>
+
+</table>
+
+</form>
+
+{{> footer}}

@@ -1,0 +1,13 @@
+{{> header}}
+
+{{#if search_results}}
+<p>
+Search Results For "{{search_string}}" 
+  - <a href="{{default_values.home_url}}/{{search_type}}/{{search_string}}">#</a> 
+  - <a href="{{default_values.home_url}}/{{search_type}}/{{search_string}}/rss">rss</a> 
+</p>
+{{/if}}
+
+{{> incstream}}
+
+{{> footer}}

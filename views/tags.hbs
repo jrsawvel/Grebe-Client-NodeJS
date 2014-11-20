@@ -1,0 +1,15 @@
+{{> header}}
+
+<p>
+<strong>Tags by</strong>
+   <a href="{{home_url}}/tags/name">name</a>
+ - <a href="{{home_url}}/tags/count">count</a>
+</p>
+
+<p>
+{{#each tag_list}}
+<a href="{{home_url}}/tag/{{this.tag_name}}">{{this.tag_name}}</a> - {{this.tag_count}} <br />
+{{/each}}
+</p>
+
+{{> footer}}

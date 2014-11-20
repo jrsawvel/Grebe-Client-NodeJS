@@ -1,0 +1,14 @@
+{{> header}}
+
+<p>
+<strong>Related posts for : <a href="{{home_url}}/{{post_id}}/{{uri_title}}">{{title}}</a></strong>
+</p>
+
+{{#each related_posts}}
+<p>
+<a href="{{this.home_url}}/{{this.post_id}}/{{this.uri_title}}">{{this.title}}</a> - {{this.formatted_modified_date}}<br />
+</p>
+<!-- weighted count {{this.wt}} -->
+{{/each}}
+
+{{> footer}}

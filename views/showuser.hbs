@@ -1,0 +1,32 @@
+{{> header}}
+
+<p>
+<strong>User Profile for "{{profileusername}}"</strong>
+</p>
+
+{{#if deleteduser}}
+<p>
+<span style="color: #c00">User account deactivated</span>
+</p>
+{{/if}}
+
+<ul>
+<li><a title="Articles by {{profileusername}}" href="{{home_url}}/userarticles/{{profileusername}}">Articles</a></li>
+</ul>
+
+{{#if ownerloggedin}}
+<div id="loggedinuserinfo">
+<ul>
+<li><a title="Log out of your account" href="{{home_url}}/logout">Logout</a></li>
+<li><a href="{{home_url}}/settings">Change your password, e-mail address, or description info</a></li>
+<li><a title="Draft posts" href="{{home_url}}/drafts">Drafts</a></li>
+<li><a title="Notes" href="{{home_url}}/notes">Notes</a></li>
+</ul>
+</div>
+{{/if}}
+
+<p>
+{{{descformat}}}
+</p>
+
+{{> footer}}

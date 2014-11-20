@@ -1,0 +1,43 @@
+{{#each stream}}
+
+<div class="post-stream">
+<article class="post">
+<div class="{{this.user_action}}">
+<!-- {{this.post_type}} -->
+<h1 class="headingtext"><a href="{{home_url}}/{{this.post_id}}/{{this.uri_title}}">{{this.title}}</a></h1>
+<div class="largescreens-{{this.post_type}}"> {{{this.formatted_text}}} </div>
+{{#if this.more_text_exists}}
+<span class="largescreens-{{this.post_type}}"><a href="{{home_url}}/{{this.post_id}}/{{this.uri_title}}"><strong>more&gt;&gt;</strong></a></span>
+{{/if}}
+
+{{#if this.readingtime}}
+ <span class="greytext">{{this.readingtime}} min read</span>
+{{else}}
+{{#if this.more_text_exists}}
+<span class="largescreens-{{this.post_type}}"><br /></span>
+{{/if}}
+{{/if}}
+<div>
+<span class="greytext"><a href="{{home_url}}/user/{{this.user_name}}">{{this.user_name}}</a></span> 
+<span class="greytext">- <a href="{{home_url}}/{{this.post_id}}/{{this.uri_title}}"><time datetime="{{this.modified_date}}">{{this.formatted_date}}</time></a></span>
+{{#if this.reader_is_author}}
+ &nbsp; &nbsp; <span class="greytext"><a title="{{this.user_action}} post" href="{{home_url}}/{{this.user_action}}/{{this.post_id}}">[{{this.user_action}}]</a></span>
+{{/if}}
+</div>
+{{#if this.tags_exist}}
+{{#if this.more_text_exists}}
+ <span class="greytext">{{{this.tag_link_str}}}</span>
+{{/if}}
+{{/if}}
+</div>
+</article>
+</div>
+{{/each}}
+
+{{#if not_last_page}}
+<span id="olderlink"><a href="{{next_page_url}}">Older &gt;&gt;</a></span>
+{{/if}}
+{{#if not_page_one}}
+<a href="{{previous_page_url}}">&lt;&lt; Newer</a>
+{{/if}}
+

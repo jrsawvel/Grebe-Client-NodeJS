@@ -1,0 +1,56 @@
+{{> header}}
+<article class="post">
+
+{{#if viewing_old_version}}
+<p>
+<small><strong>You're viewing old version number {{version}}</strong> -
+<a href="{{home_url}}/{{parent_id}}">Current version</a></small>
+</p>
+{{/if}}
+
+
+{{#if reader_is_author}}
+<div style="float:right; margin-top: 15px;">
+<span class="greytext"><a href="{{home_url}}/edit/{{post_id}}/{{uri_title}}">EDIT</a></span>
+</div>
+{{else}}
+{{#if reading_time}}
+<div style="float:right; font-size:80%; margin-top:5px;">
+<small>{{reading_time}} min</small>
+</div>
+{{/if}}
+{{/if}}
+
+
+<section id="post-top">
+<h1 class="headingtext"><a href="{{home_url}}/{{post_id}}/{{uri_title}}">{{title}}</a></h1>
+</section>
+{{{formatted_text}}}
+<div class="greytext">
+<p>
+by <a href="{{home_url}}/user/{{author_name}}">{{author_name}}</a>
+- {{word_count}} words
+{{#if reading_time}}
+- {{reading_time}} min read
+{{/if}}
+<br />
+created: <time datetime="{{created_date}}">{{formatted_created_date}}</time>
+{{#if modified}}
+- modified: <time datetime="{{modified_date}}">{{formatted_modified_date}}</time>
+{{/if}}
+- <a title="Permalink" href="{{home_url}}/{{post_id}}/{{uri_title}}">#</a>
+<br />
+<a title="Versions" href="{{home_url}}/source/{{post_id}}/{{uri_title}}">source</a>
+-
+<a title="Versions" href="{{home_url}}/versions/{{post_id}}/{{uri_title}}">versions</a>
+{{#if related_posts_count}}
+- <a href="{{home_url}}/relatedposts/{{post_id}}/{{uri_title}}">related posts: {{related_posts_count}}</a>
+{{/if}}
+<!-- - <a href="{{home_url}}/relatedposts/{{post_id}}/{{uri_title}}">related posts</a> -->
+{{#if reader_is_author}}
+- <a href="{{home_url}}/edit/{{post_id}}/{{uri_title}}">EDIT</a>
+{{/if}}
+</p>
+</div>
+</article>
+{{> footer}}
