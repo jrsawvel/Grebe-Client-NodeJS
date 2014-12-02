@@ -1,0 +1,39 @@
+{{> header}}
+
+<blockquote>
+
+<p>
+<strong>
+"{{title}}" : <span style="color: #c00;">Comparing versions {{left_version}} and {{right_version}}</span>
+</strong>
+</p>
+
+<p>
+<a href="{{home_url}}/{{post_id}}/{{uri_title}}">Back to current version</a> |  
+<a href="{{home_url}}/versions/{{post_id}}/{{uri_title}}">All versions</a> 
+&nbsp; &nbsp; 
+<span class="greytext">
+<span class="added">+ added</span> &nbsp;
+<span class="removed">- removed</span> &nbsp;
+<span class="changed">c changed</span> &nbsp;
+<span class="unmodified">u unmodified</span>
+</span>
+</p>
+
+<table class="greytext" border="1" cellspacing="0" cellpadding="4">
+ <tr>
+  <td colspan="2" align="center"><a href="{{home_url}}/{{left_post_id}}/{{left_uri_title}}">Version {{left_version}}</a> : {{left_date}}, {{left_time}}</td>
+  <td align="center"><a href="{{home_url}}/{{right_post_id}}/{{right_uri_title}}">Version {{right_version}}</a> : {{right_date}}, {{right_time}}</td>
+ </tr>
+{{#each compare_loop}}
+ <tr>
+  <td class="greytext">{{this.modindicator}}</td>
+  <td class="{{this.leftdiffclass}}">{{{this.left}}}</td>
+  <td class="{{this.rightdiffclass}}">{{{this.right}}}</td>
+ </tr>
+{{/each}}
+</table>
+
+</blockquote>
+
+{{> footer}}

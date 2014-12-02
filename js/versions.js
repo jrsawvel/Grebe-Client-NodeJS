@@ -26,6 +26,10 @@ var Versions = {
             getres.on('end', function() {
                 var obj = JSON.parse(get_data);
              if ( getres.statusCode < 300 ) {
+                if ( obj.version_list.length > 0 ) {
+                    obj.version_list[0].checked = 'checked=\"checked\"';
+                }
+
                 var data = {
                     pagetitle:              'Versions for ' + obj.title,
                     current_post_id:        obj.post_id,
@@ -56,7 +60,61 @@ var Versions = {
 
     'compare': function (req, res) {
 
-    }
+        var leftid = 0;
+        var rightid = 0;
+
+        if ( req.param('leftid') ) {
+            leftid = req.param('leftid');
+        }
+
+        if ( req.param('rightid') ) {
+            rightid = req.param('rightid');
+        }
+
+        options.path = global_defaults.api_uri + "/versions/" + leftid + "/" + rightid;
+
+        http.get(options, function(getres) {
+            var get_data = '';
+            getres.on('data', function (chunk) {
+                get_data += chunk;
+            });
+
+            getres.on('end', function() {
+                var obj = JSON.parse(get_data);
+                if ( getres.statusCode < 300 ) {
+                    var data = {
+                        pagetitle:              'Comparing versions for IDs ' + leftid + ' and ' + rightid,
+                        title:                  obj.top_version.title,
+                        post_id:                obj.top_version.post_id,
+                        uri_title:              obj.top_version.uri_title,
+                        left_version:           obj.version_data.left_version,
+                        left_post_id:           obj.version_data.left_post_id,
+                        left_uri_title:         obj.version_data.left_uri_title,
+                        left_date:              obj.version_data.left_date,
+                        left_time:              obj.version_data.left_time,
+                        right_version:          obj.version_data.right_version,
+                        right_post_id:          obj.version_data.right_post_id,
+                        right_uri_title:        obj.version_data.right_uri_title,
+                        right_date:             obj.version_data.right_date,
+                        right_time:             obj.version_data.right_time,
+                        compare_loop:           obj.compare_results,
+                        default_values:         globals.getvalues()
+                    };
+                    res.render('compare', data);
+                } else {
+                    var data = {
+                        pagetitle: 'Error',
+                        user_message:   obj.user_message,
+                        system_message: obj.system_message
+                    };  
+                    res.render('error', data);
+                }
+            });
+        }).on('error', function(e) {
+            getres.send('Could not retrieve post.');
+        });
+
+    },
 
 };
 

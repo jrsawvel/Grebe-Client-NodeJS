@@ -1,7 +1,5 @@
 require('../modules/date.format');
 
-var myDate = new Date();
-var dt_str = myDate.format('D, M j, Y - g:i a') + " UTC";
 
 // constructor
 var PageGlobals = function() {
@@ -9,10 +7,15 @@ var PageGlobals = function() {
 
 //        background_image:  'http://grebe.soupmode.com/images/downtown-toledo-winter-a.jpg', 
 
+function _get_date_time () {
+    var myDate = new Date();
+    return myDate.format('D, M j, Y - g:i a') + " UTC";
+}
+
 PageGlobals.prototype.getvalues = function() {
 
     var page_values = {
-        datetime: dt_str,
+        datetime:          _get_date_time(),
         app:               'Grebe Node.JS',
         site_name:         'Grebe',
         home_url:          'http://nodejs.soupmode.com',

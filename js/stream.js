@@ -231,8 +231,9 @@ var Stream = {
         options.path = global_defaults.api_uri + "/searches/string";
 
         var search_string = "";
+        // GET request
         if ( req.params[0] ) {
-            search_string = req.params[0];
+            search_string = encodeURIComponent(req.params[0]);
             options.path = options.path + "/" + search_string;
         }
 
@@ -241,9 +242,10 @@ var Stream = {
             page_num = req.params[1] > 0 ? parseInt(req.params[1]) : 1;
         }
 
+        // POST request
         // or if ( req.body.keywords ) {
         if ( req.param('keywords') ) {
-            search_string = req.param('keywords');
+            search_string = encodeURIComponent(req.param('keywords'));
             options.path = options.path + "/" + search_string;
         }
 
@@ -262,6 +264,7 @@ var Stream = {
                     pagetitle:          'Search Results for:' + search_string,
                     search_results:     true,
                     search_type:        'search',
+                    keywords:           decodeURIComponent(search_string),
                     search_string:      search_string,
                     stream:             obj.posts,
                     default_values:     globals.getvalues(),

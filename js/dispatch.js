@@ -11,6 +11,7 @@ var express        = require('express'),
     versions       = require('./versions'),
     user           = require('./user'),
     stream         = require('./stream'),
+    login          = require('./login'),
 
     app = express();
 
@@ -61,6 +62,8 @@ app.post('/search', stream.search);
 
 app.get(/^\/userarticles\/([0-9a-zA-Z_\-]+)$/, stream.user);
 app.get(/^\/userarticles\/([0-9a-zA-Z_\-]+)\/([0-9]*)?$/, stream.user);
+
+app.get('/login', login.form);
 
 app.use(errors.error404);
 

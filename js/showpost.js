@@ -34,6 +34,11 @@ var Post = {
                 if ( obj.parent_id > 0 ) {
                     viewing_old_version = true;
                 } 
+                var modified = false;
+                if ( obj.version > 1 ) {
+                    modified = true;
+                }
+               
                 var data = {
                     post_id:                  obj.post_id,
                     parent_id:                obj.parent_id,
@@ -43,12 +48,15 @@ var Post = {
                     uri_title:                obj.uri_title,
                     usinglargeimageheader:    obj.usinglargeimageheader,
                     largeimageheaderurl:      obj.largeimageheaderurl,
+                    usingimageheader:         obj.usingimageheader,
+                    imageheaderurl:           obj.imageheaderurl,
                     formatted_text:           obj.formatted_text,
                     author_name:              obj.author_name,
                     created_date:             obj.created_date,
                     modified_date:            obj.modified_date,
                     formatted_created_date:   obj.formatted_created_date,
                     formatted_modified_date:  obj.formatted_modified_date,
+                    modified:                 modified,
                     version:                  obj.version,
                     reader_is_author:         obj.reader_is_author,
                     word_count:               obj.word_count,
