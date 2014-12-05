@@ -11,6 +11,35 @@ var options = {
   path: ''
 };
 
+function _create_table_of_contents (formatted_text) {
+    var loop_data = [];
+    var res = formatted_text.match(/<!-- header:([1-6]):(.*?) -->/mg);
+
+    for (i=0; i<res.length; i++ ) {
+        var headers   = [];
+        var regex = /<!-- header:([1-6]):(.*?) -->/m; 
+        if ( headers = regex.exec(res[i]) ) {
+            for (j=0; j<headers.length; j+=3 ) {
+            var hash = {     level: headers[j+1], 
+                           toclink: headers[j+2],
+                        cleantitle: _clean_title(headers[j+2])
+                       };
+            }
+            loop_data.push(hash);
+        }
+    }
+    return loop_data;
+}
+
+function _clean_title (hstr) {
+   hstr = hstr.replace(/[-]/g,  "");
+   hstr = hstr.replace(/[ ]/g,  "-");
+   hstr = hstr.replace(/[:]/g,  "-");
+   hstr = hstr.replace(/--/g,   "-");
+   // only use alphanumeric, underscore, and dash in friendly link url
+   hstr = hstr.replace(/[^\w-]+/g,   "");
+   return hstr;
+}
 
 var Post = {
 
@@ -38,6 +67,13 @@ var Post = {
                 if ( obj.version > 1 ) {
                     modified = true;
                 }
+
+                obj.usingtoc = 0;
+                var toc_loop = [{}];
+                if ( obj.table_of_contents ) {
+                    toc_loop = _create_table_of_contents(obj.formatted_text);
+                    obj.usingtoc = 1; 
+                }
                
                 var data = {
                     post_id:                  obj.post_id,
@@ -62,6 +98,8 @@ var Post = {
                     word_count:               obj.word_count,
                     reading_time:             obj.reading_time,
                     related_posts_count:      obj.related_posts_count,
+                    usingtoc:                 obj.usingtoc,
+                    toc_loop:                 toc_loop,
                     default_values: globals.getvalues()
                 };
                 res.render('post', data);

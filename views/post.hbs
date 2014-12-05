@@ -1,6 +1,14 @@
 {{> header}}
 <article class="post">
 
+{{#if usingtoc}}
+<div id="toc">
+{{#each toc_loop}}
+<span class="toclevel{{this.level}}">&#149; <a href="#{{this.cleantitle}}">{{this.toclink}}</a></span><br />
+{{/each}}
+</div>
+{{/if}}
+
 {{#if viewing_old_version}}
 <p>
 <small><strong>You're viewing old version number {{version}}</strong> -
