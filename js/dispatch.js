@@ -2,6 +2,7 @@ var express        = require('express'),
     bodyParser     = require('body-parser'),
     exphbs         = require('express-handlebars'),
     path           = require('path'),
+    cookie_parser  = require('cookie-parser'),
     post           = require('./showpost'),
     tags           = require('./tags'),
     source         = require('./showpostsource'),
@@ -26,6 +27,8 @@ app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'hbs');
 
 app.use(bodyParser.urlencoded({ extended: true })); // parse application/x-www-form-urlencoded
+
+app.use(cookie_parser());
 
 //  the regex in app.get supports the following URIs:
 //    /248 - /248/ - /248/site-info
@@ -64,6 +67,8 @@ app.get(/^\/userarticles\/([0-9a-zA-Z_\-]+)$/, stream.user);
 app.get(/^\/userarticles\/([0-9a-zA-Z_\-]+)\/([0-9]*)?$/, stream.user);
 
 app.get('/login', login.form);
+app.post('/newloginlink', login.login);
+app.get(/^\/nopwdlogin\/(.*)\/(.*)/, login.nopwdlogin);
 
 app.use(errors.error404);
 

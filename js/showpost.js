@@ -1,13 +1,18 @@
 
 var http    = require('http');
-var PageGlobals = require('./pageglobals');
 
+var PageGlobals = require('./pageglobals');
 var globals     = new PageGlobals();
 var global_defaults = globals.getvalues();
 
+
+var UserCookies = require('./usercookies');
+var user_cookies = new UserCookies();
+
+
 var options = {
   host: global_defaults.host,
-  port: 80,
+  port: global_defaults.api_port,
   path: ''
 };
 
@@ -44,12 +49,17 @@ function _clean_title (hstr) {
 var Post = {
 
     'show': function (req, res) {
+
+        var uc = user_cookies.getvalues(req);
+
         var viewing_old_version = false;
         if ( isNaN(req.params[0]) && req.params[0] == 'post' ) {
             options.path = global_defaults.api_uri + "/posts/" + req.params[1];
         } else {
             options.path = global_defaults.api_uri + "/posts/" + req.params[0];
         }
+
+        options.path = options.path + '/?user_name=' + uc.username + '&user_id=' + uc.userid + '&session_id=' + uc.sessionid + '&text=html';
 
         http.get(options, function(getres) {
             var get_data = '';
@@ -59,6 +69,10 @@ var Post = {
 
             getres.on('end', function() {
                 var obj = JSON.parse(get_data);
+
+                var default_values = globals.getvalues();
+                default_values.user_cookies = uc;
+
              if ( getres.statusCode < 300 ) {
                 if ( obj.parent_id > 0 ) {
                     viewing_old_version = true;
@@ -74,7 +88,7 @@ var Post = {
                     toc_loop = _create_table_of_contents(obj.formatted_text);
                     obj.usingtoc = 1; 
                 }
-               
+ 
                 var data = {
                     post_id:                  obj.post_id,
                     parent_id:                obj.parent_id,
@@ -100,14 +114,15 @@ var Post = {
                     related_posts_count:      obj.related_posts_count,
                     usingtoc:                 obj.usingtoc,
                     toc_loop:                 toc_loop,
-                    default_values: globals.getvalues()
+                    default_values: default_values
                 };
                 res.render('post', data);
               } else {
                 var data = {
                     pagetitle:      'Error',
                     user_message:   obj.user_message,
-                    system_message: obj.system_message
+                    system_message: obj.system_message,
+                    default_values: default_values
                 };  
                 res.render('error', data);
               }

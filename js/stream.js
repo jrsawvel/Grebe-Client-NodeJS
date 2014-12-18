@@ -5,9 +5,12 @@ var PageGlobals = require('./pageglobals');
 var globals         = new PageGlobals();
 var global_defaults = globals.getvalues();
 
+var UserCookies = require('./usercookies');
+var user_cookies = new UserCookies();
+
 var options = {
   host: global_defaults.host,
-  port: 80,
+  port: global_defaults.api_port,
   path: ''
 };
 
@@ -19,12 +22,16 @@ function show_stream (template, res, data) {
 var Stream = {
 
     'homepage': function (req, res) {
+        var uc = user_cookies.getvalues(req);
+
         var page_num = 1;
         options.path = global_defaults.api_uri + "/posts";
         if ( req.params[0] && !isNaN(req.params[0]) ) {
             page_num = req.params[0] > 0 ? parseInt(req.params[0]) : 1;
             options.path = options.path + "/?page=" + page_num;
         }
+
+        options.path = options.path + '/?user_name=' + uc.username + '&user_id=' + uc.userid + '&session_id=' + uc.sessionid + '&text=html';
 
         http.get(options, function(getres) {
             var get_data = '';
@@ -34,16 +41,19 @@ var Stream = {
 
             getres.on('end', function() {
               var obj = JSON.parse(get_data);
+              var default_values = globals.getvalues();
+              default_values.user_cookies = uc;
               if ( getres.statusCode < 300 ) {
                 var next_page_num = page_num + 1;
                 var prev_page_num = page_num - 1;
+
                 var data = {
                     background_image:   global_defaults.background_image,
                     blog_description:   global_defaults.site_description,
                     blog_title:         global_defaults.site_name,
                     pagetitle:          'Home Page',
                     stream:             obj.posts,
-                    default_values:     globals.getvalues(),
+                    default_values:     default_values,
                     not_last_page:      obj.next_link_bool ? 1 : 0,
                     not_page_one:       page_num==1 ? 0 : 1,
                     next_page_url:      "/articles/" + next_page_num,
@@ -54,7 +64,8 @@ var Stream = {
                 var data = {
                     pagetitle: 'Error',
                     user_message:   obj.user_message,
-                    system_message: obj.system_message
+                    system_message: obj.system_message,
+                    default_values:     default_values,
                 };  
                 res.render('error', data);
               }
@@ -65,12 +76,16 @@ var Stream = {
     },
 
     'changes': function (req, res) {
+        var uc = user_cookies.getvalues(req);
+
         var page_num = 1;
         options.path = global_defaults.api_uri + "/posts/?sortby=modified";
         if ( req.params[0] && !isNaN(req.params[0]) ) {
             page_num = req.params[0] > 0 ? parseInt(req.params[0]) : 1;
             options.path = options.path + "&page=" + page_num;
         }
+
+        options.path = options.path + '/?user_name=' + uc.username + '&user_id=' + uc.userid + '&session_id=' + uc.sessionid + '&text=html';
 
         http.get(options, function(getres) {
             var get_data = '';
@@ -80,16 +95,19 @@ var Stream = {
 
             getres.on('end', function() {
               var obj = JSON.parse(get_data);
+              var default_values = globals.getvalues();
+              default_values.user_cookies = uc;
               if ( getres.statusCode < 300 ) {
                 var next_page_num = page_num + 1;
                 var prev_page_num = page_num - 1;
+
                 var data = {
                     background_image:   global_defaults.background_image,
                     blog_description:   global_defaults.site_description,
                     blog_title:         global_defaults.site_name,
                     pagetitle:          'Listed by Modified Date',
                     stream:             obj.posts,
-                    default_values:     globals.getvalues(),
+                    default_values:     default_values,
                     not_last_page:      obj.next_link_bool ? 1 : 0,
                     not_page_one:       page_num==1 ? 0 : 1,
                     next_page_url:      "/changes/" + next_page_num,
@@ -100,7 +118,8 @@ var Stream = {
                 var data = {
                     pagetitle: 'Error',
                     user_message:   obj.user_message,
-                    system_message: obj.system_message
+                    system_message: obj.system_message,
+                    default_values:     default_values,
                 };  
                 res.render('error', data);
               }
@@ -111,6 +130,8 @@ var Stream = {
     },
 
     'user': function (req, res) {
+        var uc = user_cookies.getvalues(req);
+
         var page_num = 1;
         options.path = global_defaults.api_uri + "/posts";
 
@@ -125,6 +146,8 @@ var Stream = {
             options.path = options.path + "&page=" + page_num;
         }
 
+        options.path = options.path + '&user_name=' + uc.username + '&user_id=' + uc.userid + '&session_id=' + uc.sessionid + '&text=html';
+
         http.get(options, function(getres) {
             var get_data = '';
             getres.on('data', function (chunk) {
@@ -133,6 +156,10 @@ var Stream = {
 
             getres.on('end', function() {
               var obj = JSON.parse(get_data);
+
+              var default_values = globals.getvalues();
+              default_values.user_cookies = uc;
+
               if ( getres.statusCode < 300 ) {
                 var next_page_num = page_num + 1;
                 var prev_page_num = page_num - 1;
@@ -140,6 +167,7 @@ var Stream = {
                 if ( obj.blog_banner_image ) {
                     background_image = obj.blog_banner_image;
                 }
+
                 var data = {
                     background_image:   background_image, 
                     blog_author_image:  obj.blog_author_image,
@@ -152,7 +180,7 @@ var Stream = {
                     search_type:        'userarticles',
                     search_string:      author,
                     stream:             obj.posts,
-                    default_values:     globals.getvalues(),
+                    default_values:     default_values,
                     not_last_page:      obj.next_link_bool ? 1 : 0,
                     not_page_one:       page_num==1 ? 0 : 1,
                     next_page_url:      "/userarticles/" + author + "/" + next_page_num,
@@ -163,7 +191,8 @@ var Stream = {
                 var data = {
                     pagetitle: 'Error',
                     user_message:   obj.user_message,
-                    system_message: obj.system_message
+                    system_message: obj.system_message,
+                    default_values:     default_values,
                 };  
                 res.render('error', data);
               }
@@ -174,6 +203,8 @@ var Stream = {
     },
 
     'tag': function (req, res) {
+        var uc = user_cookies.getvalues(req);
+
         var page_num = 1;
         options.path = global_defaults.api_uri + "/searches/tag";
 
@@ -188,6 +219,8 @@ var Stream = {
             page_num = req.params[1] > 0 ? parseInt(req.params[1]) : 1;
         }
 
+        options.path = options.path + '/?user_name=' + uc.username + '&user_id=' + uc.userid + '&session_id=' + uc.sessionid + '&text=html';
+
         http.get(options, function(getres) {
             var get_data = '';
             getres.on('data', function (chunk) {
@@ -196,16 +229,21 @@ var Stream = {
 
             getres.on('end', function() {
               var obj = JSON.parse(get_data);
+
+              var default_values = globals.getvalues();
+              default_values.user_cookies = uc;
+
               if ( getres.statusCode < 300 ) {
                 var next_page_num = page_num + 1;
                 var prev_page_num = page_num - 1;
+
                 var data = {
                     pagetitle:          'Search Results for Tag:' + tagname,
                     search_results:     true,
                     search_type:        'tag',
                     search_string:      tagname,
                     stream:             obj.posts,
-                    default_values:     globals.getvalues(),
+                    default_values:     default_values,
                     not_last_page:      obj.next_link_bool ? 1 : 0,
                     not_page_one:       page_num==1 ? 0 : 1,
                     next_page_url:      "/tag/" + tagname + "/" + next_page_num,
@@ -216,7 +254,8 @@ var Stream = {
                 var data = {
                     pagetitle: 'Error',
                     user_message:   obj.user_message,
-                    system_message: obj.system_message
+                    system_message: obj.system_message,
+                    default_values:     default_values,
                 };  
                 res.render('error', data);
               }
@@ -227,6 +266,8 @@ var Stream = {
     },
 
     'search': function (req, res) {
+        var uc = user_cookies.getvalues(req);
+
         var page_num = 1;
         options.path = global_defaults.api_uri + "/searches/string";
 
@@ -249,6 +290,8 @@ var Stream = {
             options.path = options.path + "/" + search_string;
         }
 
+        options.path = options.path + '/?user_name=' + uc.username + '&user_id=' + uc.userid + '&session_id=' + uc.sessionid + '&text=html';
+
         http.get(options, function(getres) {
             var get_data = '';
             getres.on('data', function (chunk) {
@@ -257,9 +300,14 @@ var Stream = {
 
             getres.on('end', function() {
               var obj = JSON.parse(get_data);
+
+              var default_values = globals.getvalues();
+              default_values.user_cookies = uc;
+
               if ( getres.statusCode < 300 ) {
                 var next_page_num = page_num + 1;
                 var prev_page_num = page_num - 1;
+
                 var data = {
                     pagetitle:          'Search Results for:' + search_string,
                     search_results:     true,
@@ -267,7 +315,7 @@ var Stream = {
                     keywords:           decodeURIComponent(search_string),
                     search_string:      search_string,
                     stream:             obj.posts,
-                    default_values:     globals.getvalues(),
+                    default_values:     default_values,
                     not_last_page:      obj.next_link_bool ? 1 : 0,
                     not_page_one:       page_num==1 ? 0 : 1,
                     next_page_url:      "/search/" + search_string + "/" + next_page_num,
@@ -278,7 +326,8 @@ var Stream = {
                 var data = {
                     pagetitle: 'Error',
                     user_message:   obj.user_message,
-                    system_message: obj.system_message
+                    system_message: obj.system_message,
+                    default_values:     default_values,
                 };  
                 res.render('error', data);
               }

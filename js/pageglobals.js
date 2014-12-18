@@ -1,6 +1,5 @@
 require('../modules/date.format');
 
-
 // constructor
 var PageGlobals = function() {
 };
@@ -20,9 +19,11 @@ PageGlobals.prototype.getvalues = function() {
         site_name:         'Grebe',
         home_url:          'http://nodejs.soupmode.com',
         host:              'grebe.soupmode.com',
+        api_port:          80,
         api_uri:           '/api/v1',
         background_image:  'http://nodejs.soupmode.com/images/rivp-fall-4.jpg', 
         site_description:  'Read-only Node.js Client',
+        cookie_prefix:     'nodejsgrebe',
     };
 
     return page_values;

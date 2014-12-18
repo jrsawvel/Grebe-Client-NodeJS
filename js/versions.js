@@ -5,16 +5,23 @@ var PageGlobals = require('./pageglobals');
 var globals         = new PageGlobals();
 var global_defaults = globals.getvalues();
 
+var UserCookies = require('./usercookies');
+var user_cookies = new UserCookies();
+
 var options = {
   host: global_defaults.host,
-  port: 80,
+  port: global_defaults.api_port,
   path: ''
 };
 
 var Versions = {
 
     'list': function (req, res) {
+        var uc = user_cookies.getvalues(req);
+
         options.path = global_defaults.api_uri + "/versions/" + req.params[0];
+
+        options.path = options.path + '/?user_name=' + uc.username + '&user_id=' + uc.userid + '&session_id=' + uc.sessionid + '&text=html';
 
         http.get(options, function(getres) {
             // console.log('debug list versions status code = ' + getres.statusCode);
@@ -25,6 +32,10 @@ var Versions = {
 
             getres.on('end', function() {
                 var obj = JSON.parse(get_data);
+
+                var default_values = globals.getvalues();
+                default_values.user_cookies = uc;
+
              if ( getres.statusCode < 300 ) {
                 if ( obj.version_list.length > 0 ) {
                     obj.version_list[0].checked = 'checked=\"checked\"';
@@ -41,14 +52,15 @@ var Versions = {
                     current_modified_time:  obj.formatted_modified_time,
                     current_edit_reason:    obj.edit_reason,
                     version_list:           obj.version_list,
-                    default_values:         globals.getvalues()
+                    default_values:         default_values
                 };
                 res.render('versions', data);
               } else {
                 var data = {
                     pagetitle: 'Error',
                     user_message:   obj.user_message,
-                    system_message: obj.system_message
+                    system_message: obj.system_message,
+                    default_values:         default_values
                 };  
                 res.render('error', data);
               }
@@ -59,6 +71,8 @@ var Versions = {
     },
 
     'compare': function (req, res) {
+
+        var uc = user_cookies.getvalues(req);
 
         var leftid = 0;
         var rightid = 0;
@@ -72,6 +86,7 @@ var Versions = {
         }
 
         options.path = global_defaults.api_uri + "/versions/" + leftid + "/" + rightid;
+        options.path = options.path + '/?user_name=' + uc.username + '&user_id=' + uc.userid + '&session_id=' + uc.sessionid + '&text=html';
 
         http.get(options, function(getres) {
             var get_data = '';
@@ -81,6 +96,10 @@ var Versions = {
 
             getres.on('end', function() {
                 var obj = JSON.parse(get_data);
+
+                var default_values = globals.getvalues();
+                default_values.user_cookies = uc;
+
                 if ( getres.statusCode < 300 ) {
                     var data = {
                         pagetitle:              'Comparing versions for IDs ' + leftid + ' and ' + rightid,
@@ -98,14 +117,15 @@ var Versions = {
                         right_date:             obj.version_data.right_date,
                         right_time:             obj.version_data.right_time,
                         compare_loop:           obj.compare_results,
-                        default_values:         globals.getvalues()
+                        default_values:         default_values
                     };
                     res.render('compare', data);
                 } else {
                     var data = {
                         pagetitle: 'Error',
                         user_message:   obj.user_message,
-                        system_message: obj.system_message
+                        system_message: obj.system_message,
+                        default_values: default_values
                     };  
                     res.render('error', data);
                 }

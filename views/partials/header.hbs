@@ -38,7 +38,12 @@
 </div>
 <nav>
 <ul>
-<li><a title="Home Page" href="{{default_values.home_url}}"><i class="fa fa-home"></i></li></a> 
+<li><a title="Home Page" href="{{default_values.home_url}}"><i class="fa fa-home"></i></li></a>  
+{{#if default_values.user_cookies.userid }}
+<li class="userlink"><a title="Your profile and settings" href="/user/{{default_values.user_cookies.username}}"><i class="fa fa-cog"></i></a></li>
+<li class="userlink"><a title="Notes" href="/notes"><i class="fa fa-file-text"></i></a></li>
+<li class="userlink"><a title="Create new post" href="/compose"><i class="fa fa-pencil"></i></a></li>
+{{/if}}
 </ul>
 </nav>
 </header>
