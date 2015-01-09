@@ -1,0 +1,51 @@
+{{> header}}
+
+{{#if viewing_old_version}}
+<p>
+You're EDITING old version number {{version_number}}. <a href="/{{parent_id}}/{{uri_title}}">Current version</a>
+</p>
+{{/if}}
+
+{{#if error_exists}} 
+<p>
+<h2>Post Input Error</strong></h2>
+{{error_message}}
+</p>
+{{/if}}
+
+<p>
+<strong>Editing :</strong> <a href="/{{post_id}}">{{title}}</a>
+</p>
+
+<article class="post">
+{{{formatted_text}}}
+</article>
+
+<p>
+<form id="parulaform" method="post" action="/updatepost">
+<input type="hidden" name="post_id" value="{{post_id}}"> 
+<input type="hidden" name="post_digest" value="{{post_digest}}"> 
+
+<textarea id="textareaboxpost" name="markup_text" rows="25" cols="80" >{{markup_text}}</textarea>
+</p>
+
+<div style="float:right">
+<a href="/splitscreenedit/{{post_id}}"><small>split</small></a>
+
+</div>
+
+<p> 
+reason for edit (optional)
+<input size="30" maxlength="80" type="text" name="edit_reason" value="{{edit_reason}}">
+</p>
+ 
+<p>
+<input class="submitbutton" type="submit" name="sb" value="Preview">
+</p>
+
+<p> 
+<input class="submitbutton" type="submit" name="sb" value="Update">
+</p>
+
+</form>
+{{> footer}}

@@ -1,0 +1,39 @@
+{{#if errorexists }}
+<p>
+<h2>Article Input Error</strong></h2>
+{{errormessage}}
+</p>
+{{/if}}
+
+{{#if previewingpost }}
+<p>
+Previewing post ...
+</p>
+
+{{#if is_article }}
+<h1>{{{preview_title}}}</h1>
+{{/if}}
+<article class="post">
+{{{formatted_text}}}
+</article>
+{{/if}}
+
+<p>
+<form id="grebeform" method="post" action="/createpost">
+<textarea id="textareaboxpost" name="markup_content" rows="15" cols="60">{{post_text}}</textarea>
+</p>
+
+<div style="float:right">
+<a href="/splitscreen"><small>split</small></a>
+
+</div>
+
+<p>
+<input class="submitbutton" type="submit" name="sb" value="Preview">
+</p>
+
+<p>
+<input class="submitbutton" type="submit" name="sb" value="Post">
+</p>
+
+</form>

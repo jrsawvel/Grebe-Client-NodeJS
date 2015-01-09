@@ -1,0 +1,18 @@
+
+{{> header}}
+
+{{#if default_values.user_cookies.loggedin }}
+
+<p>
+<form id="grebeform" method="post" action="/createpost">
+<input type="hidden" name="post_location" value="notes_stream">
+<textarea id="microblogtextareabox" name="markup_content" rows="5" cols="50" wrap="virtual" autofocus>{{microblogpostingtext}}</textarea>
+<br>
+<input class="submitbutton" type="submit" name="sb" value="Post">
+</form>
+</p>
+
+{{> incstream}}
+{{/if}}
+
+{{> footer}}

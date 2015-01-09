@@ -85,7 +85,7 @@ var Stream = {
             options.path = options.path + "&page=" + page_num;
         }
 
-        options.path = options.path + '/?user_name=' + uc.username + '&user_id=' + uc.userid + '&session_id=' + uc.sessionid + '&text=html';
+        options.path = options.path + '&user_name=' + uc.username + '&user_id=' + uc.userid + '&session_id=' + uc.sessionid + '&text=html';
 
         http.get(options, function(getres) {
             var get_data = '';
@@ -114,6 +114,108 @@ var Stream = {
                     previous_page_url:  "/changes/" + prev_page_num,
                 };
                 show_stream('articles', res, data);
+              } else {
+                var data = {
+                    pagetitle: 'Error',
+                    user_message:   obj.user_message,
+                    system_message: obj.system_message,
+                    default_values:     default_values,
+                };  
+                res.render('error', data);
+              }
+            });
+        }).on('error', function(e) {
+            getres.send('Could not retrieve post.');
+        });
+    },
+
+    'drafts': function (req, res) {
+        var uc = user_cookies.getvalues(req);
+
+        var page_num = 1;
+        options.path = global_defaults.api_uri + "/posts/?type=draft&author=" + uc.username;
+        if ( req.params[0] && !isNaN(req.params[0]) ) {
+            page_num = req.params[0] > 0 ? parseInt(req.params[0]) : 1;
+            options.path = options.path + "&page=" + page_num;
+        }
+
+        options.path = options.path + '&user_name=' + uc.username + '&user_id=' + uc.userid + '&session_id=' + uc.sessionid + '&text=html';
+
+        http.get(options, function(getres) {
+            var get_data = '';
+            getres.on('data', function (chunk) {
+                get_data += chunk;
+            });
+
+            getres.on('end', function() {
+              var obj = JSON.parse(get_data);
+              var default_values = globals.getvalues();
+              default_values.user_cookies = uc;
+              if ( getres.statusCode < 300 ) {
+                var next_page_num = page_num + 1;
+                var prev_page_num = page_num - 1;
+
+                var data = {
+                    pagetitle:          'Draft Posts',
+                    stream:             obj.posts,
+                    default_values:     default_values,
+                    not_last_page:      obj.next_link_bool ? 1 : 0,
+                    not_page_one:       page_num==1 ? 0 : 1,
+                    next_page_url:      "/drafts/" + next_page_num,
+                    previous_page_url:  "/drafts/" + prev_page_num,
+                };
+                show_stream('drafts', res, data);
+              } else {
+                var data = {
+                    pagetitle: 'Error',
+                    user_message:   obj.user_message,
+                    system_message: obj.system_message,
+                    default_values:     default_values,
+                };  
+                res.render('error', data);
+              }
+            });
+        }).on('error', function(e) {
+            getres.send('Could not retrieve post.');
+        });
+    },
+
+    'notes': function (req, res) {
+        var uc = user_cookies.getvalues(req);
+
+        var page_num = 1;
+        options.path = global_defaults.api_uri + "/posts/?type=note&author=" + uc.username;
+        if ( req.params[0] && !isNaN(req.params[0]) ) {
+            page_num = req.params[0] > 0 ? parseInt(req.params[0]) : 1;
+            options.path = options.path + "&page=" + page_num;
+        }
+
+        options.path = options.path + '&user_name=' + uc.username + '&user_id=' + uc.userid + '&session_id=' + uc.sessionid + '&text=html';
+
+        http.get(options, function(getres) {
+            var get_data = '';
+            getres.on('data', function (chunk) {
+                get_data += chunk;
+            });
+
+            getres.on('end', function() {
+              var obj = JSON.parse(get_data);
+              var default_values = globals.getvalues();
+              default_values.user_cookies = uc;
+              if ( getres.statusCode < 300 ) {
+                var next_page_num = page_num + 1;
+                var prev_page_num = page_num - 1;
+
+                var data = {
+                    pagetitle:          'Notes',
+                    stream:             obj.posts,
+                    default_values:     default_values,
+                    not_last_page:      obj.next_link_bool ? 1 : 0,
+                    not_page_one:       page_num==1 ? 0 : 1,
+                    next_page_url:      "/notes/" + next_page_num,
+                    previous_page_url:  "/notes/" + prev_page_num,
+                };
+                show_stream('notes', res, data);
               } else {
                 var data = {
                     pagetitle: 'Error',

@@ -1,10 +1,8 @@
-
 var http    = require('http');
 
 var PageGlobals = require('./pageglobals');
 var globals     = new PageGlobals();
 var global_defaults = globals.getvalues();
-
 
 var UserCookies = require('./usercookies');
 var user_cookies = new UserCookies();

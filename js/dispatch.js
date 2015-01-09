@@ -13,6 +13,10 @@ var express        = require('express'),
     user           = require('./user'),
     stream         = require('./stream'),
     login          = require('./login'),
+    logout         = require('./logout'),
+    changestatus   = require('./changestatus'),
+    newpost        = require('./newpost'),
+    editpost       = require('./editpost'),
 
     app = express();
 
@@ -55,6 +59,12 @@ app.get(/^\/articles(?:\/(.*))?$/, stream.homepage);
 
 app.get(/^\/changes(?:\/(.*))?$/, stream.changes);
 
+app.get(/^\/drafts(?:\/(.*))?$/, stream.drafts);
+
+app.get(/^\/notes(?:\/(.*))?$/,  stream.notes);
+
+app.get('/login', login.form);
+
 // tag/nodejs/3 - 3 = page number
 app.get(/^\/tag\/([0-9a-zA-Z_\-+]+)$/, stream.tag);
 app.get(/^\/tag\/([0-9a-zA-Z_\-+]+)\/([0-9]*)$/, stream.tag);
@@ -66,9 +76,19 @@ app.post('/search', stream.search);
 app.get(/^\/userarticles\/([0-9a-zA-Z_\-]+)$/, stream.user);
 app.get(/^\/userarticles\/([0-9a-zA-Z_\-]+)\/([0-9]*)?$/, stream.user);
 
-app.get('/login', login.form);
 app.post('/newloginlink', login.login);
 app.get(/^\/nopwdlogin\/(.*)\/(.*)/, login.nopwdlogin);
+
+app.get('/logout', logout.logout);
+
+app.get(/^\/delete\/([0-9a-zA-Z_\-]+)?$/,  changestatus.delete);
+app.get(/^\/undelete\/([0-9a-zA-Z_\-]+)?$/,  changestatus.undelete);
+
+app.post('/createpost', newpost.create);
+app.get('/compose', newpost.newpostform);
+
+app.get(/^\/(edit)\/([0-9]+)(?:\/([0-9a-zA-Z_\-]*))?$/, editpost.getpost);
+app.post('/updatepost', editpost.update);
 
 app.use(errors.error404);
 

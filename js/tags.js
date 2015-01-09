@@ -25,6 +25,7 @@ var Tags = {
         }
         
         options.path = options.path + '&user_name=' + uc.username + '&user_id=' + uc.userid + '&session_id=' + uc.sessionid + '&text=html';
+console.log(options.path);
 
         http.get(options, function(getres) {
             // console.log('debug status code = ' + getres.statusCode);

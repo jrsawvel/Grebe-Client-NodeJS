@@ -1,4 +1,3 @@
-
 var http        = require('http');
 var querystring = require('querystring');
 
@@ -19,7 +18,8 @@ function show_error(res, user_msg, system_msg) {
     var data = {
         pagetitle: 'Error',
         user_message:   user_msg,
-        system_message: system_msg
+        system_message: system_msg,
+        default_values: globals.getvalues(),
     };  
     res.render('error', data);
 }
@@ -65,8 +65,6 @@ var Login = {
                 h_res.on('end', function() {
                     var obj = JSON.parse(response_string);
                     if ( h_res.statusCode < 300 ) {
-                        // var debug_str = 'user_id=' + obj.user_id + ' user_name=' + obj.user_name + ' session_id=' + obj.session_id;
-                        // show_error(res, "debug", debug_str);
                         res.cookie(global_defaults.cookie_prefix + 'userid',    obj.user_id,    {domain: global_defaults.cookie_host, path: '/'});
                         res.cookie(global_defaults.cookie_prefix + 'username',  obj.user_name,  {domain: global_defaults.cookie_host, path: '/'});
                         res.cookie(global_defaults.cookie_prefix + 'sessionid', obj.session_id, {domain: global_defaults.cookie_host, path: '/'});

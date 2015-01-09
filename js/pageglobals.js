@@ -22,7 +22,7 @@ PageGlobals.prototype.getvalues = function() {
         api_port:          80,
         api_uri:           '/api/v1',
         background_image:  'http://nodejs.soupmode.com/images/rivp-fall-4.jpg', 
-        site_description:  'Read-only Node.js Client',
+        site_description:  'Node.js Grebe Client',
         cookie_prefix:     'nodejsgrebe',
     };
 
