@@ -1,0 +1,32 @@
+{{> header}}
+
+<p>
+{{user_name}} settings
+</p>
+
+<form method="post" action="/customizeuser">
+<input type="hidden" name="userid" value="{{user_id}}">
+
+<p>
+username: <strong>{{user_name}}</strong>
+</p>
+
+<p>
+e-mail address: <input type="text" size="30" name="email" value="{{email}}">
+</p>
+
+<p>
+Describe yourself for the rest of us.
+</p>
+
+<p>
+<textarea rows="10" cols="50" name="desc_markup">{{desc_markup}}</textarea>
+</p>
+
+<p>
+<input class="submitbutton" type="submit" name="sb" value="Update My Profile">
+</p>
+
+</form>
+
+{{> footer}}

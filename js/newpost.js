@@ -69,6 +69,48 @@ var NewPost = {
         });
     },
 
+    'splitscreen': function (req, res) {
+        var uc = user_cookies.getvalues(req);
+        options.path = global_defaults.api_uri + "/users/" + uc.username;
+        options.path = options.path + '/?user_name=' + uc.username + '&user_id=' + uc.userid + '&session_id=' + uc.sessionid; 
+        options.headers = '';
+        options.method = 'GET';
+
+        http.get(options, function(getres) {
+            var get_data = '';
+            getres.on('data', function (chunk) {
+                get_data += chunk;
+            });
+
+            getres.on('end', function() {
+                var obj = JSON.parse(get_data);
+
+                var default_values = globals.getvalues();
+                default_values.user_cookies = uc;
+ 
+             if ( getres.statusCode < 300 && obj.hasOwnProperty('user_digest') ) {
+                 var data = {
+                     pagetitle: 'Creating Post - Split Screen',
+                     action: 'addarticle',
+                     api_url: 'http://' + global_defaults.host +  global_defaults.api_uri,
+                     post_id: 0,
+                     post_digest: 'undef',  
+                     default_values: default_values,
+                 };
+                 res.render('splitscreenform', data);
+              } else {
+                  var data = {
+                      pagetitle: 'Login Form',
+                      default_values: globals.getvalues()
+                  };
+                  res.render('loginform', data);
+              }
+            });
+        }).on('error', function(e) {
+            res.send('Could not retrieve post.');
+        });
+    },
+
     'create': function (req, res) {
         var uc = user_cookies.getvalues(req);
 

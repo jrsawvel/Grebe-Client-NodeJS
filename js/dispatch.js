@@ -17,6 +17,7 @@ var express        = require('express'),
     changestatus   = require('./changestatus'),
     newpost        = require('./newpost'),
     editpost       = require('./editpost'),
+    profile        = require('./profile'),
 
     app = express();
 
@@ -86,9 +87,13 @@ app.get(/^\/undelete\/([0-9a-zA-Z_\-]+)?$/,  changestatus.undelete);
 
 app.post('/createpost', newpost.create);
 app.get('/compose', newpost.newpostform);
+app.get('/splitscreen', newpost.splitscreen);
 
 app.get(/^\/(edit)\/([0-9]+)(?:\/([0-9a-zA-Z_\-]*))?$/, editpost.getpost);
 app.post('/updatepost', editpost.update);
+
+app.get('/settings', profile.settings);
+app.post('/customizeuser', profile.update);
 
 app.use(errors.error404);
 
